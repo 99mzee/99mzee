@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>99mze — Second Hand Phones Marketplace</title>
+  <meta name="description" content="Buy & sell second hand phones on 99mze. Simple listings, search, contact via WhatsApp." />
+  <style>
+    /* Minimal, modern styles */
+    :root{
+      --accent:#0ea5a4;
+      --bg-overlay: rgba(0,0,0,0.45);
+      --card-bg: rgba(255,255,255,0.95);
+      --muted:#6b7280;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    html,body{height:100%;margin:0}
+    body{
+      background-image: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1400&q=60');
+      background-size:cover;background-position:center;color:#111;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      display:flex;flex-direction:column;
+    }
+    .container{max-width:1100px;margin:40px auto;padding:24px}
+    header{display:flex;align-items:center;justify-content:space-between;color:#fff}
+    .brand{display:flex;gap:14px;align-items:center}
+    .logo{background:rgba(255,255,255,0.12);padding:8px 12px;border-radius:10px;font-weight:700}
+    .search-area{margin-top:24px;display:flex;gap:12px}
+    .search-area input[type="search"]{flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#fff}
+    .search-area select, .search-area button{padding:12px 14px;border-radius:10px;border:none}
+    .controls{display:flex;gap:8px;align-items:center}
+    .btn{background:var(--accent);color:#fff;border:none;padding:10px 14px;border-radius:10px;cursor:pointer}
+    main{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:26px}
+    .listings{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+    .card{background:var(--card-bg);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.12);display:flex;flex-direction:column}
+    .card img{width:100%;height:160px;object-fit:cover;border-radius:8px}
+    .card h3{margin:8px 0 6px;font-size:16px}
+    .meta{font-size:13px;color:var(--muted)}
+    .card .row{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+    .buy-btn{background:#25D366;color:#fff;padding:8px 10px;border-radius:8px;border:none;cursor:pointer}
+    aside{background:rgba(255,255,255,0.9);padding:14px;border-radius:12px;height:max-content}
+    form.add-ad{display:flex;flex-direction:column;gap:8px}
+    form label{font-size:13px;color:#333}
+    form input, form textarea, form select{padding:8px;border-radius:8px;border:1px solid #e5e7eb}
+    footer{margin-top:28px;color:#fff;padding:18px;background:linear-gradient(90deg,rgba(0,0,0,0.2),transparent)}
+    .muted{color:var(--muted)}
+    .chip{padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.06);font-size:13px}
+    @media (max-width:900px){main{grid-template-columns:1fr} aside{order:2} .container{padding:12px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">99mze</div>
+        <div>
+          <div style="font-weight:700">99mze — Buy & Sell Second Hand Phones</div>
+          <div class="muted" style="font-size:13px">Sonitpur, Assam • Owner: Mridul Islam</div>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div class="chip">Customer Care: +91 76388 76790</div>
+        <div style="font-size:13px;margin-top:6px">Email: 99mze@mze.com</div>
+      </div>
+    </header>
+
+    <div class="search-area">
+      <input id="searchInput" type="search" placeholder="Search phones by model, brand or location..." />
+      <select id="filterCondition">
+        <option value="">Any Condition</option>
+        <option value="New">New</option>
+        <option value="Like New">Like New</option>
+        <option value="Good">Good</option>
+        <option value="Fair">Fair</option>
+      </select>
+      <select id="sortBy">
+        <option value="latest">Latest</option>
+        <option value="priceAsc">Price: Low → High</option>
+        <option value="priceDesc">Price: High → Low</option>
+      </select>
+      <div class="controls">
+        <button id="postAdBtn" class="btn">Post an Ad</button>
+      </div>
+    </div>
+
+    <main>
+      <section>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h2 style="color:#fff">Available Phones</h2>
+          <div class="muted">Location: Sonitpur, Assam</div>
+        </div>
+
+        <div id="listings" class="listings" aria-live="polite">
+          <!-- Listing cards injected by JS -->
+        </div>
+        <div id="noResults" style="display:none;color:#fff;margin-top:18px">No listings found.</div>
+      </section>
+
+      <aside>
+        <h3 style="margin-top:0">What is 99mze?</h3>
+        <p class="muted">A simple OLX-like marketplace focused on second hand phones. Click "Buy" on any listing to contact the seller on WhatsApp.</p>
+        <hr style="margin:12px 0" />
+        <h4 style="margin:6px 0">Quick Info</h4>
+        <p class="muted">Owner: Mridul Islam<br/>Location: Sonitpur, Assam 784117 • INDIA</p>
+        <hr style="margin:12px 0" />
+        <div style="font-size:13px" class="muted">Sample categories</div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <div class="chip">Android</div>
+          <div class="chip">iPhone</div>
+          <div class="chip">Budget</div>
+          <div class="chip">Flagship</div>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div>
+          <strong>99mze</strong> — Second Hand Phone Marketplace<br/>
+          Owner: Mridul Islam • Sonitpur, Assam 784117
+        </div>
+        <div style="text-align:right">
+          <div>Customer Care: +91 76388 76790</div>
+          <div>Email: 99mze@mze.com</div>
+          <div style="margin-top:6px">Buy link opens WhatsApp: <a href="https://wa.me/message/Z4FBLEEXJPBKK1" style="color:var(--accent)">Contact on WhatsApp</a></div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal for posting an ad -->
+  <div id="modal" style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.5);z-index:40">
+    <div style="width:100%;max-width:720px;background:#fff;border-radius:12px;padding:18px;box-shadow:0 20px 60px rgba(2,6,23,0.4)">
+      <h3 style="margin-top:0">Post an Ad</h3>
+      <form id="adForm" class="add-ad">
+        <input required name="title" placeholder="Title (e.g. iPhone 11 - 64GB)" />
+        <input required name="brand" placeholder="Brand (e.g. Apple, Samsung)" />
+        <input required name="price" type="number" placeholder="Price (INR)" />
+        <select name="condition">
+          <option value="Like New">Like New</option>
+          <option value="Good">Good</option>
+          <option value="Fair">Fair</option>
+        </select>
+        <input name="location" placeholder="Location (city)" value="Sonitpur" />
+        <textarea name="description" rows="3" placeholder="Short description"></textarea>
+        <label style="font-size:13px">Upload Image (optional)</label>
+        <input name="image" type="file" accept="image/*" />
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button type="button" id="cancelAd" style="background:#eee;padding:8px 12px;border-radius:8px">Cancel</button>
+          <button class="btn" type="submit">Publish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Basic client-side listings with localStorage persistence
+    const WA_LINK = 'https://wa.me/message/Z4FBLEEXJPBKK1';
+    const sample = [
+      {id:1,title:'iPhone 11 - 64GB',brand:'Apple',price:11500,condition:'Good',location:'Sonitpur',desc:'Used 2 years, battery 85%',img:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=60',posted:Date.now()-1000*60*60*24},
+      {id:2,title:'Samsung Galaxy A12',brand:'Samsung',price:6500,condition:'Like New',location:'Guwahati',desc:'Excellent condition',img:'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=800&q=60',posted:Date.now()-1000*60*60*48}
+    ];
+
+    function loadListings(){
+      const raw = localStorage.getItem('mze_listings');
+      if(raw) return JSON.parse(raw);
+      localStorage.setItem('mze_listings', JSON.stringify(sample));
+      return sample;
+    }
+    function saveListings(arr){ localStorage.setItem('mze_listings', JSON.stringify(arr)); }
+
+    let listings = loadListings();
+
+    const listingsEl = document.getElementById('listings');
+    const noResultsEl = document.getElementById('noResults');
+
+    function render(){
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+      const condition = document.getElementById('filterCondition').value;
+      const sortBy = document.getElementById('sortBy').value;
+      let out = listings.filter(l=>{
+        const matchesQ = q === '' || (l.title+' '+l.brand+' '+(l.location||'')).toLowerCase().includes(q);
+        const matchesC = !condition || l.condition === condition;
+        return matchesQ && matchesC;
+      });
+      if(sortBy==='priceAsc') out.sort((a,b)=>a.price-b.price);
+      if(sortBy==='priceDesc') out.sort((a,b)=>b.price-a.price);
+      if(sortBy==='latest') out.sort((a,b)=>b.posted-b.posted);
+
+      listingsEl.innerHTML = '';
+      if(out.length===0){ noResultsEl.style.display='block'; } else { noResultsEl.style.display='none'; }
+
+      out.forEach(item=>{
+        const card = document.createElement('div'); card.className='card';
+        card.innerHTML = `
+          <img src="${item.img||'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=800&q=60'}" alt="${item.title}"/>
+          <h3>${escapeHtml(item.title)}</h3>
+          <div class="meta">${escapeHtml(item.brand)} • ${escapeHtml(item.location||'Unknown')}</div>
+          <div style="margin-top:8px;font-weight:700">₹ ${numberWithCommas(item.price)}</div>
+          <div class="row">
+            <div class="muted" style="font-size:13px">${escapeHtml(item.condition)}</div>
+            <div>
+              <button class="buy-btn" data-id="${item.id}">Buy</button>
+            </div>
+          </div>
+        `;
+        listingsEl.appendChild(card);
+      });
+
+      // wire up buy buttons
+      document.querySelectorAll('.buy-btn').forEach(b=>{
+        b.addEventListener('click', ()=>{
+          // open WhatsApp link — user will message seller. We can append a prefilled text.
+          const id = b.getAttribute('data-id');
+          const item = listings.find(x=>String(x.id)===String(id));
+          const text = encodeURIComponent(`Hi, I'm interested in your listing: ${item.title} (₹${item.price}) — Posted on 99mze`);
+          window.open(WA_LINK + '?text=' + text, '_blank');
+        });
+      });
+    }
+
+    // helpers
+    function numberWithCommas(x){ return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+    function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c])); }
+
+    // search inputs
+    document.getElementById('searchInput').addEventListener('input', render);
+    document.getElementById('filterCondition').addEventListener('change', render);
+    document.getElementById('sortBy').addEventListener('change', render);
+
+    // modal logic
+    const modal = document.getElementById('modal');
+    document.getElementById('postAdBtn').addEventListener('click', ()=>{ modal.style.display='flex'; });
+    document.getElementById('cancelAd').addEventListener('click', ()=>{ modal.style.display='none'; });
+
+    document.getElementById('adForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const newId = Date.now();
+      const title = fd.get('title');
+      const brand = fd.get('brand');
+      const price = Number(fd.get('price')||0);
+      const condition = fd.get('condition');
+      const location = fd.get('location')||'Sonitpur';
+      const desc = fd.get('description')||'';
+      const file = e.target.elements['image'].files[0];
+
+      if(file){
+        const reader = new FileReader();
+        reader.onload = function(ev){
+          const img = ev.target.result;
+          addListing({id:newId,title,brand,price,condition,location,desc,img,posted:Date.now()});
+          modal.style.display='none';
+        }
+        reader.readAsDataURL(file);
+      } else {
+        addListing({id:newId,title,brand,price,condition,location,desc,img:null,posted:Date.now()});
+        modal.style.display='none';
+      }
+      e.target.reset();
+    });
+
+    function addListing(item){
+      listings.unshift(item);
+      saveListings(listings);
+      render();
+    }
+
+    // initial render
+    render();
+
+  </script>
+</body>
+</html>
